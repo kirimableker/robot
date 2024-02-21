@@ -10,20 +10,16 @@
 #define HOLES_DISC 20
 #define SPEED_LOG_PERIOD_MS 200
 
-volatile unsigned int pulses1 = 0;
-volatile unsigned int pulses2 = 0;
-float rpm1;
-float rpm2;
-
-unsigned long timeOld = 0;
-int speed = 50;
+volatile int pulses_l = 0;
+volatile int pulses_r = 0;
+const int speed = 50;
 
 void counter1( void ){
- pulses1++;
+  pulses_l++;
 }
 
 void counter2( void ){
- pulses2++;
+  pulses_r++;
 }
  
 void setup( void ){
@@ -56,15 +52,29 @@ void setup( void ){
 }
  
 void loop( void ){
-  if ((millis() - timeOld) >= SPEED_LOG_PERIOD_MS){
-    rpm1 = (float)pulses1 * ((60.0f * 1000.0f) / (float)(HOLES_DISC * SPEED_LOG_PERIOD_MS));
-    rpm2 = (float)pulses2 * ((60.0f * 1000.0f) / (float)(HOLES_DISC * SPEED_LOG_PERIOD_MS));
+  unsigned long timestamp_rpm_measurement;
+  if ((millis() - timestamp_rpm_measurement) >= SPEED_LOG_PERIOD_MS){
+    // Храним прошлое значение импульсов
+    static int pulses_l_old = 0;
+    static int pulses_r_old = 0;
+    // Узнаем время, которое прошло с предыдущего измерения RPM
+    unsigned long delta_time = millis() - timestamp_rpm_measurement; 
+    timestamp_rpm_measurement = millis();
+
+    // Нахождение изменения кол-ва импульсов с прошлого исполнения
+    int pulses_l_delta = pulses_l - pulses_l_old;
+    int pulses_r_delta = pulses_r - pulses_r_old;
+    
+    pulses_l_old = pulses_l;
+    pulses_r_old = pulses_l;
+
+    // Расчет RPM
+    float rpm_l = (float)pulses_l_delta * ((60.0f * 1000.0f) / (float)(HOLES_DISC * delta_time));
+    float rpm_r = (float)pulses_r_delta * ((60.0f * 1000.0f) / (float)(HOLES_DISC * delta_time));
+
     Serial.print("\nl = ");
-    Serial.print(rpm1);
+    Serial.print(rpm_l);
     Serial.print("\tr = ");
-    Serial.print(rpm2);
-    timeOld = millis();
-    pulses1 = 0; // Сбрасываем счетчики импульсов
-    pulses2 = 0;
+    Serial.print(rpm_r);
   }
 }
