@@ -9,12 +9,12 @@
 
 #define HOLES_DISC 20
 
-volatile unsigned int pulses1;
-volatile unsigned int pulses2;
+volatile unsigned int pulses1 = 0;
+volatile unsigned int pulses2 = 0;
 float rpm1;
 float rpm2;
 
-unsigned long timeOld;
+unsigned long timeOld = 0;
 int speed = 50;
 
 void counter1( void ){
@@ -29,12 +29,8 @@ void setup( void ){
   Serial.begin(115200);
   pinMode(LEFT, INPUT);
   pinMode(RIGHT, INPUT);
-  pulses1 = 0;
-  pulses2 = 0;
-  timeOld = 0;
   attachInterrupt(digitalPinToInterrupt(LEFT), counter1, CHANGE);
   attachInterrupt(digitalPinToInterrupt(RIGHT), counter2, CHANGE);
-
   digitalWrite(L1,OUTPUT);
   digitalWrite(L2,OUTPUT);
   digitalWrite(R1,OUTPUT);
