@@ -45,8 +45,8 @@ void setup( void ){
  
 void loop( void ){
   if (millis() - timeOld >= 1000){
-    rpm1 = (pulses1 * 60) / (HOLES_DISC);
-    rpm2 = (pulses2 * 60) / (HOLES_DISC);
+    rpm1 = (float)pulses1 * (60.0f / (float)(HOLES_DISC));
+    rpm2 = (float)pulses2 * (60.0f / (float)(HOLES_DISC));
     Serial.print("\nl = ");
     Serial.print(rpm1);
     Serial.print("\tr = ");
