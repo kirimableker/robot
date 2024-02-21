@@ -64,8 +64,8 @@ void loop()
  timeOld = millis();
  pulses1 = 0; // Сбрасываем счетчики импульсов
  pulses2 = 0;
- attachInterrupt(digitalPinToInterrupt(left), counter1, FALLING);
- attachInterrupt(digitalPinToInterrupt(right), counter2, FALLING);
+ attachInterrupt(digitalPinToInterrupt(left), counter1, CHANGE);
+ attachInterrupt(digitalPinToInterrupt(right), counter2, CHANGE);
  
  }
   digitalWrite(L1,LOW);
