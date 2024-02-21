@@ -26,7 +26,7 @@ void counter2( void ){
 }
  
 void setup( void ){
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(LEFT, INPUT);
   pinMode(RIGHT, INPUT);
   pulses1 = 0;
