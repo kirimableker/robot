@@ -8,6 +8,7 @@
 #define R2 10 //Напрвление вращения правого мотора
 
 #define HOLES_DISC 20
+#define SPEED_LOG_PERIOD_MS 200
 
 volatile unsigned int pulses1 = 0;
 volatile unsigned int pulses2 = 0;
@@ -39,15 +40,25 @@ void setup( void ){
 
   attachInterrupt(digitalPinToInterrupt(LEFT), counter1, CHANGE);
   attachInterrupt(digitalPinToInterrupt(RIGHT), counter2, CHANGE);
-  
+
+  // По умолчанию моторы выключены  
   analogWrite(LP, 0);
   analogWrite(RP, 0);
+
+  // Установка направления движения
+  digitalWrite(L1,LOW);
+  digitalWrite(L2,HIGH);
+  digitalWrite(R1,LOW);
+  digitalWrite(R2,HIGH);
+  // Установка скорости движения
+  analogWrite(LP, speed);
+  analogWrite(RP, speed);
 }
  
 void loop( void ){
-  if (millis() - timeOld >= 1000){
-    rpm1 = (float)pulses1 * (60.0f / (float)(HOLES_DISC));
-    rpm2 = (float)pulses2 * (60.0f / (float)(HOLES_DISC));
+  if ((millis() - timeOld) >= SPEED_LOG_PERIOD_MS){
+    rpm1 = (float)pulses1 * ((60.0f * 1000.0f) / (float)(HOLES_DISC * SPEED_LOG_PERIOD_MS));
+    rpm2 = (float)pulses2 * ((60.0f * 1000.0f) / (float)(HOLES_DISC * SPEED_LOG_PERIOD_MS));
     Serial.print("\nl = ");
     Serial.print(rpm1);
     Serial.print("\tr = ");
@@ -56,10 +67,4 @@ void loop( void ){
     pulses1 = 0; // Сбрасываем счетчики импульсов
     pulses2 = 0;
   }
-  digitalWrite(L1,LOW);
-  digitalWrite(L2,HIGH);
-  digitalWrite(R1,LOW);
-  digitalWrite(R2,HIGH);
-  analogWrite(LP, speed);
-  analogWrite(RP, speed);
 }
