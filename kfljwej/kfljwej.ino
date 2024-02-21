@@ -45,9 +45,7 @@ void setup( void ){
  
 void loop( void ){
   if (millis() - timeOld >= 1000){
-    detachInterrupt(digitalPinToInterrupt(LEFT));
     rpm1 = (pulses1 * 60) / (HOLES_DISC);
-    detachInterrupt(digitalPinToInterrupt(RIGHT));
     rpm2 = (pulses2 * 60) / (HOLES_DISC);
     Serial.print("\nl = ");
     Serial.print(rpm1);
@@ -56,8 +54,6 @@ void loop( void ){
     timeOld = millis();
     pulses1 = 0; // Сбрасываем счетчики импульсов
     pulses2 = 0;
-    attachInterrupt(digitalPinToInterrupt(LEFT), counter1, FALLING);
-    attachInterrupt(digitalPinToInterrupt(RIGHT), counter2, FALLING);
   }
   digitalWrite(L1,LOW);
   digitalWrite(L2,HIGH);
