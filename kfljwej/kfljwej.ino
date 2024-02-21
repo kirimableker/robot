@@ -52,7 +52,7 @@ void setup( void ){
 }
  
 void loop( void ){
-  unsigned long timestamp_rpm_measurement;
+  static unsigned long timestamp_rpm_measurement;
   if ((millis() - timestamp_rpm_measurement) >= SPEED_LOG_PERIOD_MS){
     // Храним прошлое значение импульсов
     static int pulses_l_old = 0;
@@ -66,7 +66,7 @@ void loop( void ){
     int pulses_r_delta = pulses_r - pulses_r_old;
     
     pulses_l_old = pulses_l;
-    pulses_r_old = pulses_l;
+    pulses_r_old = pulses_r;
 
     // Расчет RPM
     float rpm_l = (float)pulses_l_delta * ((60.0f * 1000.0f) / (float)(HOLES_DISC * delta_time));
