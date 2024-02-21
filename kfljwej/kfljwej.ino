@@ -27,16 +27,21 @@ void counter2( void ){
  
 void setup( void ){
   Serial.begin(115200);
+
   pinMode(LEFT, INPUT);
   pinMode(RIGHT, INPUT);
+  pinMode(L1,OUTPUT);
+  pinMode(L2,OUTPUT);
+  pinMode(R1,OUTPUT);
+  pinMode(R2,OUTPUT);
+  pinMode(LP,OUTPUT);
+  pinMode(RP,OUTPUT);
+
   attachInterrupt(digitalPinToInterrupt(LEFT), counter1, CHANGE);
   attachInterrupt(digitalPinToInterrupt(RIGHT), counter2, CHANGE);
-  digitalWrite(L1,OUTPUT);
-  digitalWrite(L2,OUTPUT);
-  digitalWrite(R1,OUTPUT);
-  digitalWrite(R2,OUTPUT);
-  analogWrite(LP, OUTPUT);
-  analogWrite(RP, OUTPUT);
+  
+  analogWrite(LP, 0);
+  analogWrite(RP, 0);
 }
  
 void loop( void ){
