@@ -1,5 +1,5 @@
-#define left 1 
-#define right 2
+#define LEFT 1 
+#define RIGHT 2
 #define LP 5 //Скорость левого мотора
 #define RP 13 //Скорость правого мотора
 #define L1 12 //Направление вращения левого мотора
@@ -7,37 +7,33 @@
 #define R1 8 //Напрвление вращения правого мотора
 #define R2 10 //Напрвление вращения правого мотора
 
+#define HOLES_DISC 20
+
 volatile unsigned int pulses1;
 volatile unsigned int pulses2;
 float rpm1;
 float rpm2;
-unsigned long timeOld;
-#define HOLES_DISC 20
 
+unsigned long timeOld;
 int speed = 50;
 
-
-void counter1()
-{
+void counter1( void ){
  pulses1++;
 }
 
-void counter2()
-{
+void counter2( void ){
  pulses2++;
 }
  
-void setup()
-{
- Serial.begin(9600);
- pinMode(left, INPUT);
- pinMode(right, INPUT);
- pulses1 = 0;
- pulses2 = 0;
- timeOld = 0;
- attachInterrupt(digitalPinToInterrupt(left), counter1, FALLING);
- attachInterrupt(digitalPinToInterrupt(right), counter2, FALLING);
-
+void setup( void ){
+  Serial.begin(9600);
+  pinMode(LEFT, INPUT);
+  pinMode(RIGHT, INPUT);
+  pulses1 = 0;
+  pulses2 = 0;
+  timeOld = 0;
+  attachInterrupt(digitalPinToInterrupt(LEFT), counter1, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(RIGHT), counter2, CHANGE);
 
   digitalWrite(L1,OUTPUT);
   digitalWrite(L2,OUTPUT);
@@ -47,27 +43,22 @@ void setup()
   analogWrite(RP, OUTPUT);
 }
  
-void loop()
-{
-
-
- if (millis() - timeOld >= 1000)
- {
- detachInterrupt(digitalPinToInterrupt(left));
- rpm1 = (pulses1 * 60) / (HOLES_DISC);
- detachInterrupt(digitalPinToInterrupt(right));
- rpm2 = (pulses2 * 60) / (HOLES_DISC);
- Serial.print("\nl = ");
- Serial.print(rpm1);
- Serial.print("\tr = ");
- Serial.print(rpm2);
- timeOld = millis();
- pulses1 = 0; // Сбрасываем счетчики импульсов
- pulses2 = 0;
- attachInterrupt(digitalPinToInterrupt(left), counter1, CHANGE);
- attachInterrupt(digitalPinToInterrupt(right), counter2, CHANGE);
- 
- }
+void loop( void ){
+  if (millis() - timeOld >= 1000){
+    detachInterrupt(digitalPinToInterrupt(LEFT));
+    rpm1 = (pulses1 * 60) / (HOLES_DISC);
+    detachInterrupt(digitalPinToInterrupt(RIGHT));
+    rpm2 = (pulses2 * 60) / (HOLES_DISC);
+    Serial.print("\nl = ");
+    Serial.print(rpm1);
+    Serial.print("\tr = ");
+    Serial.print(rpm2);
+    timeOld = millis();
+    pulses1 = 0; // Сбрасываем счетчики импульсов
+    pulses2 = 0;
+    attachInterrupt(digitalPinToInterrupt(LEFT), counter1, FALLING);
+    attachInterrupt(digitalPinToInterrupt(RIGHT), counter2, FALLING);
+  }
   digitalWrite(L1,LOW);
   digitalWrite(L2,HIGH);
   digitalWrite(R1,LOW);
