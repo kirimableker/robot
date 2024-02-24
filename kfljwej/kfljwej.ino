@@ -47,7 +47,7 @@ void setup( void ){
   digitalWrite(R1,LOW);
   digitalWrite(R2,HIGH);
   // Установка скорости движения
-  analogWrite(LP, speed);
+  analogWrite(LP, speed + 10);
   analogWrite(RP, speed);
 }
  
