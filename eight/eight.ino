@@ -57,7 +57,7 @@ void stop(){
  delay(500);
 }
 
-void turnRobot(){     
+void turnRobot1(){     
   pulses_r = 0;
   pulses_l = 0;
   digitalWrite(L1, LOW);
@@ -67,10 +67,19 @@ void turnRobot(){
   while (pulses_r <= (rad) || pulses_l <= (rad)){
      into();
   }
-  digitalWrite(L1, LOW);
-  digitalWrite(L2, HIGH);
-  digitalWrite(R1, HIGH);
-  digitalWrite(R2, LOW);
+
+}
+
+void turnRobot2(){     
+  pulses_r = 0;
+  pulses_l = 0;
+  digitalWrite(L1, HIGH);
+  digitalWrite(L2, LOW);
+  digitalWrite(R1, LOW);
+  digitalWrite(R2, HIGH);
+  while (pulses_r <= (rad) || pulses_l <= (rad)){
+     into();
+  }
 
 }
 
@@ -101,20 +110,41 @@ void setup( void ){
 }
  
 void loop( ){
+  for (int i = 0; i < 4; i++){
+    while (pulses_r <= (disk * time_lengh) || pulses_l <= (disk * time_lengh)){
+      into();
+    }
+    stop();
+    turnRobot1();
+    stop();
 
-  while (pulses_r <= (disk * time_lengh) || pulses_l <= (disk * time_lengh)){
-     into();
+    pulses_r = 0;
+    pulses_l = 0;
+
+    digitalWrite(L1,LOW);
+    digitalWrite(L2,HIGH);
+    digitalWrite(R1,LOW);
+    digitalWrite(R2,HIGH);
   }
+
+  for (int j = 0; j < 4; j++){
+    while (pulses_r <= (disk * time_lengh) || pulses_l <= (disk * time_lengh)){
+      into();
+    }
     stop();
-    turnRobot();
+    turnRobot2();
     stop();
 
-  pulses_r = 0;
-  pulses_l = 0;
+    pulses_r = 0;
+    pulses_l = 0;
 
-  digitalWrite(L1,LOW);
-  digitalWrite(L2,HIGH);
-  digitalWrite(R1,LOW);
-  digitalWrite(R2,HIGH);
-
+    digitalWrite(L1,LOW);
+    digitalWrite(L2,HIGH);
+    digitalWrite(R1,LOW);
+    digitalWrite(R2,HIGH);
+  }
 }
+
+
+
+
