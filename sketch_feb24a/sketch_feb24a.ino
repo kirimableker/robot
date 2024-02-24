@@ -8,7 +8,11 @@
 #define R2 10 //Напрвление вращения правого мотора
 
 #define SPEED_PERIOD 200
+#define SPEED_PERIOD1 200
 
+int disk = 20;
+int time_lengh = 5;
+int rad = (90 * disk * 3)/360;
 volatile int pulses_l = 0;
 volatile int pulses_r = 0;
 int speed = 50; 
@@ -21,7 +25,7 @@ void counter2( void ){
   pulses_r++;
 }
 
-void lkj(){
+void into(){
    static unsigned long time;
   
   if ((millis() - time) >= SPEED_PERIOD){
@@ -54,15 +58,19 @@ void stop(){
 }
 
 void turnRobot(){     
+  pulses_r = 0;
+  pulses_l = 0;
   digitalWrite(L1, LOW);
   digitalWrite(L2, HIGH);
   digitalWrite(R1, HIGH);
   digitalWrite(R2, LOW);
-
-  analogWrite(LP, speed);
-  analogWrite(RP, speed);
-
- delay(700);
+  while (pulses_r <= (rad) || pulses_l <= (rad)){
+     into();
+  }
+  digitalWrite(L1, LOW);
+  digitalWrite(L2, HIGH);
+  digitalWrite(R1, HIGH);
+  digitalWrite(R2, LOW);
 }
 
 void setup( void ){
@@ -93,8 +101,8 @@ void setup( void ){
  
 void loop( ){
 
-  while (pulses_r <= 100 || pulses_l <= 100){
-     lkj();
+  while (pulses_r <= (disk * time_lengh) || pulses_l <= (disk * time_lengh)){
+     into();
   }
     stop();
     turnRobot();
@@ -102,5 +110,10 @@ void loop( ){
 
   pulses_r = 0;
   pulses_l = 0;
+
+  digitalWrite(L1,LOW);
+  digitalWrite(L2,HIGH);
+  digitalWrite(R1,LOW);
+  digitalWrite(R2,HIGH);
 
 }
