@@ -67,10 +67,6 @@ void turnRobot(){
   while (pulses_r <= (rad) || pulses_l <= (rad)){
      into();
   }
-  digitalWrite(L1, LOW);
-  digitalWrite(L2, HIGH);
-  digitalWrite(R1, HIGH);
-  digitalWrite(R2, LOW);
 
 }
 
