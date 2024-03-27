@@ -68,7 +68,7 @@ void loop( void ){
     pulses_l_old = pulses_l;
     pulses_r_old = pulses_r;
 
-    // Расчет RPM
+    // Расчет RPMc:\Users\noname\Documents\GitHub\robot\energy_bang\energy_bang.ino
     float rpm_l = (float)pulses_l_delta * ((60.0f * 1000.0f) / (float)(HOLES_DISC * delta_time));
     float rpm_r = (float)pulses_r_delta * ((60.0f * 1000.0f) / (float)(HOLES_DISC * delta_time));
 
