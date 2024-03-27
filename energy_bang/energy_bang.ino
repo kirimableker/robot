@@ -16,9 +16,12 @@
 #define RIGHTBANGDIAGONAL 9
 
 
-int speed = 30;
-int turn = 20;
+int speed = 100;
+int turn = 100;
 
+const int turn_90_degree_time_ms = 400;
+const int collision_move_time = 800;
+const int waid_time_ms = 1000;
 
 void go(){
 
@@ -48,7 +51,6 @@ void fastright(){
   analogWrite(RP, turn);
   digitalWrite(R1, HIGH);
   digitalWrite(R2, LOW);
-  delay(500);
 }
 
 void fastleft(){
@@ -59,7 +61,6 @@ void fastleft(){
   analogWrite(RP, turn);
   digitalWrite(R1, LOW);
   digitalWrite(R2, HIGH);
-  delay(500);
 }
 
 void slowlyright(){
@@ -113,6 +114,51 @@ void line(){
   }  
 }
 
+void collision(){
+  //bool RIGHTS = digitalRead(RIGHTSENSOR);
+
+  // Повернуть направо 90*
+  fastright();
+  delay(turn_90_degree_time_ms);
+  stop();
+  delay(waid_time_ms);
+
+  // Проехать вперед
+  go();
+  delay(collision_move_time);
+  stop();
+  delay(waid_time_ms);
+
+  // Повернуть налево 90*
+  fastleft();
+  delay(turn_90_degree_time_ms);
+  stop();
+  delay(waid_time_ms);
+
+  // Проехать вперед
+  go();
+  delay(collision_move_time);
+  stop();
+  delay(waid_time_ms);
+
+  // Повернуть налево 90*
+  fastleft();
+  delay(turn_90_degree_time_ms);
+  stop();
+  delay(waid_time_ms);
+
+  // Проехать вперед
+  go();
+  delay(collision_move_time);
+  stop();
+  delay(waid_time_ms);
+
+  fastright();
+  delay(turn_90_degree_time_ms);
+  stop();
+  delay(waid_time_ms);
+}
+
 void setup( void ){
   Serial.begin(115200);  
 
@@ -142,46 +188,29 @@ void setup( void ){
   digitalWrite(R1,LOW);
   digitalWrite(R2,HIGH);
 
+  delay(3000);
+
+  collision();
+  while(1);
 }
+
+
  
 void loop( ){
   //0-black
   //1-white
-  byte CENTERB = digitalRead(CENTERBANG);
-  byte RIGHTB = digitalRead(RIGHTBANG);
-  byte RIGHTBD = digitalRead(RIGHTBANGDIAGONAL);
+  bool CENTERB = digitalRead(CENTERBANG);
+  bool RIGHTB = digitalRead(RIGHTBANG);
+  bool RIGHTBD = digitalRead(RIGHTBANGDIAGONAL);
 
-  byte LEFTS = digitalRead(LEFTSENSOR);
-  byte RIGHTS = digitalRead(RIGHTSENSOR);
-  byte CENTERS = digitalRead(CENTERSENSOR);
+  bool LEFTS = digitalRead(LEFTSENSOR);
+  bool RIGHTS = digitalRead(RIGHTSENSOR);
+  bool CENTERS = digitalRead(CENTERSENSOR);
 
-  if ((CENTERB==1)&&(RIGHTB==1)&&(RIGHTBD==1)){
+  if (CENTERB && RIGHTB && RIGHTBD){
     line();
-  }
-  else if ((CENTERB==0)&&(RIGHTB==1)&&(RIGHTBD==1)){
-    while (RIGHTBD != 0){
-      slowlyleft();
-    }
-  }
-  else if ((CENTERB==1)&&(RIGHTB==1)&&(RIGHTBD==0)){
-    while (RIGHTB != 0){
-      slowlyleft();
-    }
-  }
-  else if ((CENTERB==1)&&(RIGHTB==0)&&(RIGHTBD==1)){
-    while (RIGHTB == 0){
-      slowlyleft();
-    }
-  }
-  else if ((CENTERB==1)&&(RIGHTB==1)&&(RIGHTBD==1)&&((LEFTS==1)&&(CENTERS==1)&&(RIGHTS==1))){
-    while (RIGHTBD != 0){
-      slowlyright();
-    }
-  }
-  else if ((((CENTERB==0)||(RIGHTB==0)||(RIGHTBD==0))&&((LEFTS==0)||(CENTERS==0)||(RIGHTS==0)))||(((CENTERB==1)||(RIGHTB==1)||(RIGHTBD==1))&&((LEFTS==0)||(CENTERS==0)||(RIGHTS==0)))){
-    while ((LEFTS==0)&&(CENTERS==1)&&(RIGHTS==0)){
-      slowlyleft();
-    }
+  }else{
+    collision();
   }
 }
 
